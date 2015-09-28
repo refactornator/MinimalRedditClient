@@ -28,10 +28,18 @@ function requestPosts(reddit) {
 }
 
 function receivePosts(reddit, json) {
+  var children = json.data.children.filter(function(child) {
+    if(child.data.url && child.data.url.indexOf('imgur.com') !== -1) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
   return {
     type: RECEIVE_POSTS,
     reddit: reddit,
-    posts: json.data.children,
+    posts: children,
     receivedAt: Date.now()
   };
 }

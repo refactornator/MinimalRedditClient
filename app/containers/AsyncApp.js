@@ -37,37 +37,16 @@ class AsyncApp extends Component {
 
   render() {
     const { selectedReddit, posts, isFetching, lastUpdated, error } = this.props;
+    const windowHeight = document.body.offsetHeight;
+
     console.log("ERROR:", error);
     return(
       <div>
         <Picker value={selectedReddit}
                 onChange={this.handleChange}
-                options={['reactjs', 'frontend', 'relay', 'fjda;js']} />
-        <p>
-          {lastUpdated &&
-            <span>
-              Last updated at {lastUpdated}.
-              {' '}
-            </span>
-          }
-          {!isFetching &&
-            <a href='#'
-               onClick={this.handleRefreshClick}>
-              Refresh
-            </a>
-          }
-        </p>
-        {isFetching && posts.length === 0 &&
-          <h2>Loading...</h2>
-        }
-        {!isFetching && posts.length === 0 &&
-          <h2>Empty.</h2>
-        }
-        {!isFetching && error &&
-          <h2>{error}</h2>
-        }
+                options={['pics', 'funny']} />
         {posts.length > 0 &&
-          <div style={{ opacity: isFetching ? 0.5 : 1 }}>
+          <div style={{ width: '100%', height: windowHeight - 174, opacity: isFetching ? 0.5 : 1 }}>
             <Posts posts={posts} />
           </div>
         }
