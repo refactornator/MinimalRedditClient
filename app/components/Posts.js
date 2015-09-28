@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import './posts.css';
+
 const KEYS = {
   enter: 13,
   left: 37,
@@ -52,9 +54,9 @@ export default class Posts extends Component {
     var post = this.props.posts[this.state.currentIndex];
 
     return(
-      <div>
+      <div className="post">
         <span>{post.data.title}</span>
-        <img key={post.id} style={{width: '100%', height: '100%'}} src={post.data.url.replace('imgur', 'i.imgur') + '.jpg'} />
+        <img key={post.id} src={post.data.url.replace('imgur', 'i.imgur') + '.jpg'} />
       </div>
     );
   }

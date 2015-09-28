@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { selectReddit, fetchPostsIfNeeded, invalidateReddit } from '../actions';
 import Picker from '../components/Picker';
 import Posts from '../components/Posts';
+import './posts.css';
 
 class AsyncApp extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class AsyncApp extends Component {
                 onChange={this.handleChange}
                 options={['pics', 'funny']} />
         {posts.length > 0 &&
-          <div style={{ width: '100%', height: windowHeight - 174, opacity: isFetching ? 0.5 : 1 }}>
+          <div className="posts" style={{ width: '100%', opacity: isFetching ? 0.5 : 1 }}>
             <Posts posts={posts} />
           </div>
         }
