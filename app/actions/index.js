@@ -91,12 +91,10 @@ function fetchPosts(reddit) {
 function shouldFetchPosts(state, reddit) {
   const posts = state.postsByReddit[reddit];
 
-  if (!posts) {
-    return true;
-  } else if (posts.isFetching) {
+  if (posts && posts.isFetching) {
     return false;
   } else {
-    return posts.didInvalidate;
+    return true;
   }
 }
 

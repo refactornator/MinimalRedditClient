@@ -65,7 +65,7 @@ export default class Posts extends Component {
 
     return(
       <div className="post">
-        <span>{post.data.title}</span>
+        <span className="title">{post.data.title}</span>
         <img key={post.id} src={post.data.url} />
       </div>
     );
