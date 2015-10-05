@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fetchPostsIfNeeded, invalidateReddit } from '../actions';
+
 import './posts.css';
 
 const KEYS = {
@@ -36,9 +38,17 @@ export default class Posts extends Component {
         });
       }
     } else if(keyDown === KEYS.right) {
-      this.setState({
-        currentIndex: currentIndex + 1
-      });
+      if(currentIndex <= this.props.posts.length) {
+        this.setState({
+          currentIndex: currentIndex + 1
+        });
+      }
+    }
+
+    if(currentIndex >= Math.max(this.props.posts.length - 3, 0)) {
+      const { dispatch, selectedReddit } = this.props;
+      dispatch(invalidateReddit(selectedReddit));
+      dispatch(fetchPostsIfNeeded(selectedReddit));
     }
   }
 
@@ -56,7 +66,7 @@ export default class Posts extends Component {
     return(
       <div className="post">
         <span>{post.data.title}</span>
-        <img key={post.id} src={post.data.url.replace('imgur', 'i.imgur') + '.jpg'} />
+        <img key={post.id} src={post.data.url} />
       </div>
     );
   }

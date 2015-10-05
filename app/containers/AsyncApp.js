@@ -37,7 +37,7 @@ class AsyncApp extends Component {
   }
 
   render() {
-    const { selectedReddit, posts, isFetching, lastUpdated, error } = this.props;
+    const { dispatch, selectedReddit, posts, isFetching, lastUpdated, error } = this.props;
     const windowHeight = document.body.offsetHeight;
 
     console.log("ERROR:", error);
@@ -48,7 +48,7 @@ class AsyncApp extends Component {
                 options={['pics', 'funny']} />
         {posts.length > 0 &&
           <div className="posts" style={{ width: '100%', opacity: isFetching ? 0.5 : 1 }}>
-            <Posts posts={posts} />
+            <Posts posts={posts} selectedReddit={selectedReddit} dispatch={dispatch} />
           </div>
         }
       </div>

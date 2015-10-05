@@ -6,6 +6,8 @@ export const FAILURE_POSTS = 'FAILURE_POSTS';
 export const SELECT_REDDIT = 'SELECT_REDDIT';
 export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT';
 
+let after = null;
+
 export function selectReddit(reddit) {
   return {
     type: SELECT_REDDIT,
@@ -34,6 +36,11 @@ function receivePosts(reddit, json) {
     } else {
       return false;
     }
+  }).map(function(child) {
+    if(child.data.url && child.data.url.indexOf('//imgur.com') !== -1) {
+      child.data.url = child.data.url.replace('imgur.com', 'i.imgur.com') + '.jpg';
+    }
+    return child;
   });
 
   return {
@@ -54,7 +61,13 @@ function failurePosts(reddit, error) {
 function fetchPosts(reddit) {
   return dispatch => {
     dispatch(requestPosts(reddit));
-    return fetch(`http://www.reddit.com/r/${reddit}.json`)
+    var url = `http://www.reddit.com/r/${reddit}.json?limit=100`;
+    
+    if(after != null) {
+      url += `&after=${after}`;
+    }
+
+    return fetch(url)
       .then(res => {
         if (res.status >= 400) {
           throw new Error("Failed to retreive");
@@ -62,6 +75,10 @@ function fetchPosts(reddit) {
         return res.json();
       })
       .then(json => {
+        if(json.data.after) {
+          after = json.data.after;
+        }
+
         return dispatch(receivePosts(reddit, json));
       })
       .catch(error => {
