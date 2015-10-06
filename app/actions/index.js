@@ -40,8 +40,14 @@ function receivePosts(reddit, json) {
     }
   }).map(function(child) {
     if(child.data.url && child.data.url.indexOf('//imgur.com') !== -1) {
-      if(child.data.url.indexOf('//imgur.com/a/') !== -1) {
-        let albumId = child.data.url.substr(child.data.url.indexOf('/a/') + 3);
+      if(child.data.url.indexOf('//imgur.com/a/') !== -1 ||
+        child.data.url.indexOf('//imgur.com/gallery/') !== -1) {
+        let albumId;
+        if(child.data.url.indexOf('//imgur.com/a/') !== -1) {
+          albumId = child.data.url.substr(child.data.url.indexOf('/a/') + 3);
+        } else if(child.data.url.indexOf('//imgur.com/gallery/') !== -1) {
+          albumId = child.data.url.substr(child.data.url.indexOf('/gallery/') + 9);
+        }
         let url = `https://api.imgur.com/3/album/${albumId}/images`;
         fetch(url, {
           headers: {
@@ -50,12 +56,15 @@ function receivePosts(reddit, json) {
         })
         .then(res => {
           if (res.status >= 400) {
-            throw new Error("Failed to retreive");
+            // throw new Error("Failed to retreive");
+            return;
           }
           return res.json();
         })
         .then(json => {
-          child.data.images = json.data;
+          if(json) {
+            child.data.images = json.data;
+          }
         });
       } else {
         child.data.url = child.data.url.replace('imgur.com', 'i.imgur.com') + '.jpg';

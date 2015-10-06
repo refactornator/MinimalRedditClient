@@ -60,7 +60,7 @@ export default class Posts extends Component {
       post.data.url = post.data.url.replace('.gifv', '.gif');
     }
 
-    if(post.data.url.indexOf('//imgur.com/a/') !== -1) {
+    if(post.data.images && post.data.images.length > 0) {
       Media = post.data.images.map(function(image) {
         return <img src={image.link} />
       });
