@@ -1,21 +1,30 @@
 import React, { Component, PropTypes } from 'react';
 
+import './picker.scss';
+
 export default class Picker extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { value: props.value };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(value) {
+    this.setState({
+      value
+    });
+  }
+
   render() {
-    const { value, onChange, options } = this.props;
+    const { onKeyDown, options } = this.props;
 
     return(
-      <span>
-        <h1>{value}</h1>
-        <select onChange={e => onChange(e.target.value)}
-                value={value}>
-          {options.map(option =>
-            <option value={option} key={option}>
-              {option}
-            </option>)
-          }
-        </select>
-      </span>
+      <div className="header">
+        /r/<input className="subreddit" type="text" value={this.state.value} onKeyDown={e => onKeyDown(e)} onChange={e => this.handleChange(e.target.value)}>
+        </input>
+      </div>
     );
   }
 }
@@ -25,5 +34,5 @@ Picker.propTypes = {
     PropTypes.string.isRequired
   ).isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  onKeyDown: PropTypes.func.isRequired
 };

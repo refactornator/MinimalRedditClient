@@ -2,18 +2,11 @@ import React, { Component, PropTypes } from 'react';
 
 import { fetchPostsIfNeeded, invalidateReddit } from '../actions';
 
-import './posts.css';
+import './posts.scss';
 
 const KEYS = {
-  enter: 13,
   left: 37,
-  right: 39,
-  escape: 27,
-  backspace: 8,
-  comma: 188,
-  shift: 16,
-  control: 17,
-  command: 91
+  right: 39
 };
 
 export default class Posts extends Component {
@@ -61,12 +54,26 @@ export default class Posts extends Component {
   }
 
   render() {
-    var post = this.props.posts[this.state.currentIndex];
+    let post = this.props.posts[this.state.currentIndex];
+    let Media;
+    if(post.data.url.endsWith('.gifv')) {
+      post.data.url = post.data.url.replace('.gifv', '.gif');
+    }
+
+    if(post.data.url.indexOf('//imgur.com/a/') !== -1) {
+      Media = post.data.images.map(function(image) {
+        return <img src={image.link} />
+      });
+    } else {
+      Media = <img src={post.data.url} />;
+    }
+
+    console.log(post.data.url);
 
     return(
-      <div className="post">
+      <div key={post.id} className="post">
         <span className="title">{post.data.title}</span>
-        <img key={post.id} src={post.data.url} />
+        {Media}
       </div>
     );
   }

@@ -9,6 +9,8 @@ export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT';
 let after = null;
 
 export function selectReddit(reddit) {
+  after = null;
+
   return {
     type: SELECT_REDDIT,
     reddit
@@ -38,7 +40,26 @@ function receivePosts(reddit, json) {
     }
   }).map(function(child) {
     if(child.data.url && child.data.url.indexOf('//imgur.com') !== -1) {
-      child.data.url = child.data.url.replace('imgur.com', 'i.imgur.com') + '.jpg';
+      if(child.data.url.indexOf('//imgur.com/a/') !== -1) {
+        let albumId = child.data.url.substr(child.data.url.indexOf('/a/') + 3);
+        let url = `https://api.imgur.com/3/album/${albumId}/images`;
+        fetch(url, {
+          headers: {
+            'Authorization': 'Client-ID e0c0f3dae8b063f'
+          }
+        })
+        .then(res => {
+          if (res.status >= 400) {
+            throw new Error("Failed to retreive");
+          }
+          return res.json();
+        })
+        .then(json => {
+          child.data.images = json.data;
+        });
+      } else {
+        child.data.url = child.data.url.replace('imgur.com', 'i.imgur.com') + '.jpg';
+      }
     }
     return child;
   });
